@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<style>
+		@import url(http://fonts.googleapis.com/css?family=Open+Sans:400,700);
+
+		html, body{
+			height: 100%;
+			font-family: 'Open Sans';
+		}
+		body{
+			margin: 0px;
+		}
+		.sidebar{
+			background-color: #2ECC71;
+			height: 100%;
+			width: 25%;
+			float: left;
+			color: white;
+		}
+		
+		.sideContent{
+			padding: 0px 15px;
+		}
+		h1{
+			font-weight: 400;
+			margin-top: 0px;
+		}
+
+		.modules{
+			width: 75%;
+			float: right;
+			padding: 30px 0px;
+		}
+		
+		#createAnother{
+			border:none;
+			background-color: #21a859;
+			padding: 10px 20px;
+			color: white;
+			font-weight: 700;
+			border-radius: 3px;
+			text-transform: uppercase;
+			margin-top: 50px;
+			transition: 0.3s;
+		}
+		#createAnother:hover{
+			cursor: pointer;
+			background-color: #126D38;
+		}
+		h3,p{
+			padding-left: 45px;
+		}
+
+	</style>
+</head>
+
+<body>
+
+	<div class="sidebar">
+		<img src="http://turfjs.org/static/assets/img/logo.png">
+		<div class="sideContent">
+			<button id="createAnother">Create another</button>
+		</div>
+	</div>
+
+	<div class="modules">
+		<h3>Congratulations</h3>
+		<p>Your custom Turf build has been successful, please check the 'outputs' directory.</p>
+	</div>
+
+
+</body>
+<script>
+	
+	var createAnotherButton = document.getElementById("createAnother");
+
+	createAnotherButton.onclick=function(){
+		var backHome = window.location.hostname;
+		window.location.href = 'http://localhost:5000';
+	};
+	
+</script>
+</html>

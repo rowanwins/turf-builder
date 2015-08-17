@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<style>
+		@import url(http://fonts.googleapis.com/css?family=Open+Sans:400,700);
+
+		html, body{
+			height: 100%;
+			font-family: 'Open Sans';
+		}
+		body{
+			margin: 0px;
+		}
+		.sidebar{
+			background-color: #2ECC71;
+			height: 100%;
+			width: 25%;
+			float: left;
+			color: white;
+		}
+		
+		.sideContent{
+			padding: 0px 15px;
+		}
+		h1{
+			font-weight: 400;
+			margin-top: 0px;
+		}
+
+		.modules{
+			width: 75%;
+			float: right;
+			padding: 30px 0px;
+		}
+
+		#modulesList li{
+			list-style-type: none;
+			line-height: 25px;
+			font-size: 0.9em;
+		}
+
+		#modulesList{
+			-webkit-columns: 200px 3; /* Chrome, Safari, Opera */
+			-moz-columns: 200px 3; /* Firefox */
+			columns: 200px 3;
+		}
+
+		input[type=checkbox]{
+			margin-right: 10px;
+		}
+		
+		#createBuild{
+			border:none;
+			background-color: #21a859;
+			padding: 10px 20px;
+			color: white;
+			font-weight: 700;
+			border-radius: 3px;
+			text-transform: uppercase;
+			margin-top: 90px;
+			transition: 0.3s;
+		}
+		#createBuild:hover{
+			cursor: pointer;
+			background-color: #126D38;
+		}
+		h3{
+			padding-left: 45px;
+		}
+		input[type=text]{
+			border: none;
+			line-height: 24px;
+			border-radius: 2px;
+			width: 80%;
+		}
+
+		label{
+			color: #375634;
+			font-size: .8em;
+			text-transform: uppercase;
+			font-weight: 800;
+			margin-bottom: 5px;
+			display: block;
+		}
+		.note{
+			font-weight: 500;
+			text-transform: none;
+			font-style: italic;
+			margin-top: 5px;
+		}
+
+	</style>
+</head>
+
+<body>
+
+	<div class="sidebar">
+		<img src="http://turfjs.org/static/assets/img/logo.png">
+
+		<div class="sideContent">
+			<label>Output file name</label>
+			<input type="text" name="fileName"></input>
+			<label class="note">Defaults to turf_dddMDDYYYY.min.js</label>
+			<button id="createBuild">Build</button>
+		</div>
+	</div>
+
+	<div class="modules">
+		<h3>Available modules</h3>
+		<ul id="modulesList">
+			<% for(var i=0; i<turfModules.length; i++) {%>
+			<li><input type="checkbox" name=<%= turfModules[i] %> value=<%= turfModules[i] %>><%= turfModules[i] %></li>
+			<% } %>
+		</ul>
+	</div>
+
+
+</body>
+<script>
+	
+	var checkedBoxes =[];
+	var moduleList = document.getElementById("modulesList");
+	var createButton = document.getElementById("createBuild");
+
+	createButton.onclick=function(){
+		checkForCheckedBoxes(moduleList);
+		if(checkedBoxes.length > 0 ){
+			buildOutput(checkedBoxes);
+		}
+		else{
+			alert("Please select some modules");
+		}
+	};
+	
+	function checkForCheckedBoxes(moduleList) {
+		for (var i = 0; i < moduleList.childElementCount; i++ ) {
+			if (moduleList.children[i].childNodes[0].checked === true) {
+				var moduleName = moduleList.children[i].childNodes[1].data;
+				checkedBoxes.push(moduleName);
+			}
+		}
+	}
+
+	function buildOutput(checkedBoxes){
+		window.location.href = '/build?'+checkedBoxes.toString();
+	}
+
+
+	
+</script>
+</html>
