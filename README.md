@@ -14,7 +14,7 @@ In the command line type
 ````
 node index.js
 ````
-This should automatically open up a new browser window with the application, if not try navigating to (http://localhost:5000)[http://localhost:5000]
+This should automatically open up a new browser window with the application, if not try navigating to [http://localhost:5000](http://localhost:5000)
 
 ###Use
 Simply check the boxes on the interface and hit 'Build', this will generate a new file and place it in the 'Output' directory.
