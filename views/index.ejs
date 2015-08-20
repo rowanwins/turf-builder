@@ -99,8 +99,9 @@
 
 		<div class="sideContent">
 			<label>Output file name</label>
-			<input type="text" name="fileName"></input>
+			<input type="text" name="fileName" id="fileName"></input>
 			<label class="note">Defaults to turf_dddMDDYYYY.min.js</label>
+			<label class="note">No need to include the file extension (eg .min.js)</label>
 			<button id="createBuild">Build</button>
 		</div>
 	</div>
@@ -124,8 +125,11 @@
 
 	createButton.onclick=function(){
 		checkForCheckedBoxes(moduleList);
+		
+		var outputFileName = document.getElementById("fileName").value;
+
 		if(checkedBoxes.length > 0 ){
-			buildOutput(checkedBoxes);
+			window.location.href = '/build?modules='+checkedBoxes.toString()+'&fn='+outputFileName;
 		}
 		else{
 			alert("Please select some modules");
@@ -140,12 +144,6 @@
 			}
 		}
 	}
-
-	function buildOutput(checkedBoxes){
-		window.location.href = '/build?'+checkedBoxes.toString();
-	}
-
-
 	
 </script>
 </html>
