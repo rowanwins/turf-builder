@@ -7,7 +7,7 @@ This simple UI enables users to generate custom browserify builds of Turf.js wit
 
 
 ###Installation
-Download the code and place it in a folder called 'Build' in folder containing a copy of the Turf repo. Once you've done that run the following in your command line from the build directory 
+Download, then run the following in your command line from the build directory 
 ````
 npm install
 ````

@@ -31,7 +31,8 @@ app.get("/build", function(req, res){
 	fs.writeFile(__dirname + '/outputs/temp.js', outputFileString);
 
 	var b = browserify('./outputs/temp.js',{
-		standalone:"turf"
+		standalone:"turf",
+		paths: ['./node_modules/turf/node_modules']
 	});
 
 	b.transform({
@@ -61,7 +62,7 @@ app.get("/build", function(req, res){
 
 
 var turfModules =[];
-var turfLocation = '../node_modules';
+var turfLocation = 'node_modules/turf/node_modules';
 
 var startup = (function checkExistance(){
 	
