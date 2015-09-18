@@ -27,6 +27,6 @@
         "uglifyify": "3.0.1"
     },
     "scripts": {
-        "start": "node index.js"
+        "start": "supervisor index.js"
     }
 }
