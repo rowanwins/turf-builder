@@ -1,7 +1,6 @@
 var fs = require("fs");
 var path = require("path");
 var express = require("express");
-var opener = require("opener");
 
 var browserify;
 
@@ -61,18 +60,24 @@ app.get("/build", function(req, res){
 	b.bundle().pipe(writeFile);
 
 	writeFile.on('finish', function(){
-		fs.unlink(__dirname + '/outputs/temp.js');
+
+		res.download(__dirname + '/outputs/'+filename, function(err){
+			if (err) {
+				console.log("Hmm error occurred");
+			} 
+			else {
+				fs.unlink(__dirname + '/outputs/temp.js');
+				fs.unlink(__dirname + '/outputs/'+filename);
+			}
+		});
 	});
-
-	res.render("complete");
 });
-
 
 var turfModules =[];
 var turfLocation = 'node_modules/turf/node_modules';
 
 var startup = (function checkExistance(){
-	
+
 	fs.lstat(turfLocation, function (err, inodeStatus) {
 		if (err){
 			console.log("Hmmm there was an error and we couldn't find any turf modules... please double check the install instuctions");
@@ -83,7 +88,7 @@ var startup = (function checkExistance(){
 		createModuleArray(allModules);
 		checkCreateOutputDirectory();
 		startServer();
-		
+
 		return "modules could be found";
 	});
 })();
@@ -104,23 +109,25 @@ function createModuleArray(allModules){
 
 function startServer(){
 	browserify = require('browserify');
-	var port = 5000;
-	app.listen(port, function() {
-		opener("http://localhost:5000");
-		console.log("The Turf build tool has been started at http://localhost:5000, all going well it should open automatically!");
+
+	var server_port = process.env.OPENSHIFT_NODEJS_PORT || 8080;
+	var server_ip_address = process.env.OPENSHIFT_NODEJS_IP || '127.0.0.1';
+ 
+	app.listen(server_port, server_ip_address, function() {
+		console.log("The Turf build tool has been started at " + server_ip_address + " and port "+server_port);
 	});
 }
 
 
 
 function checkCreateOutputDirectory(){
-	
+
 	fs.lstat('./outputs', function (err, inodeStatus) {
 		if (err){
 			fs.mkdir('./outputs');
 			return;
 		}
-		
+
 		return "output directory already exists";
 	});
 }

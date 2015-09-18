@@ -23,8 +23,11 @@
     "browserify": "^11.1.0",
     "ejs": "2.3.3",
     "express": "4.13.3",
-    "opener": "1.4.1",
     "turf": "^2.0.2",
     "uglifyify": "3.0.1"
   }
-}
+},
+"scripts": {
+  "start": "node index.js"
+},
+"main": "index.js"
