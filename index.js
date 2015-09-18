@@ -22,6 +22,13 @@ app.get("/build", function(req, res){
 
 	for (var i = 0; i < requiredModules.length; i++ ) {
 		var plainModuleName = requiredModules[i].replace("turf-","");
+		plainModuleName = plainModuleName.split("-").map(function(elem, ind) {
+			if (ind > 0) { 
+				return elem.slice(0, 1).toUpperCase()+elem.slice(1); 
+			}
+			return elem;
+		}).join("");
+		
 		outputFileString += plainModuleName + ": require('"+ requiredModules[i] +"'),";
 	}
 
