@@ -38,9 +38,9 @@ app.get("/build", function(req, res){
 		name_id = orig_name_id+"-"+ct;
 		ct++;
 	}
-	console.log(name_id);
 
 	var temp = __dirname+'/outputs/temp-'+name_id+".js";
+	var filename = __dirname+'/outputs/'+name_id+'.min.js';
 
 	for (var i = 0; i < requiredModules.length; i++ ) {
 		var plainModuleName = requiredModules[i].replace("turf-","");
@@ -68,7 +68,6 @@ app.get("/build", function(req, res){
 		global: true
 	}, 'uglifyify');
 	
-	var filename = __dirname+'/outputs/'+name_id+'.min.js';
 	var writeFile = fs.createWriteStream(filename);
 
 	b.bundle().pipe(writeFile);
