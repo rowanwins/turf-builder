@@ -9,15 +9,38 @@ var app = express();
 app.set('view engine', 'ejs');
 
 app.get("/", function(req, res){
+	var d = (new Date()).toDateString().replace(/ /g, '');
+
 	res.render("index", {
-		turfModules: turfModules
+		turfModules: turfModules,
+		placeholder: "turf_" + d
 	});
 });
 
 app.get("/build", function(req, res){
-
 	var requiredModules = req.query.modules.split(",");
 	var outputFileString = "module.exports = {";
+	var name_id = null;
+
+	if (!req.query.fn) {
+		var d = (new Date()).toDateString().replace(/ /g, '');
+		name_id = "turf_" + d;
+	} else {
+		name_id = req.query.fn.toString();
+	}
+
+	var orig_name_id = name_id;
+	var ct = 0;
+
+	// If somebody else created a file at the exact same time, add an additional
+	// number on the end to prevent clashing
+	while (fs.existsSync('./outputs/temp-'+name_id+".js")) {
+		name_id = orig_name_id+"-"+ct;
+		ct++;
+	}
+
+	var temp = __dirname+'/outputs/temp-'+name_id+".js";
+	var filename = __dirname+'/outputs/'+name_id+'.min.js';
 
 	for (var i = 0; i < requiredModules.length; i++ ) {
 		var plainModuleName = requiredModules[i].replace("turf-","");
@@ -34,9 +57,9 @@ app.get("/build", function(req, res){
 	outputFileString = outputFileString.substring(0, outputFileString.length - 1);
 	outputFileString += "}";
 
-	fs.writeFile(__dirname + '/outputs/temp.js', outputFileString);
+	fs.writeFileSync(temp, outputFileString);
 
-	var b = browserify('./outputs/temp.js',{
+	var b = browserify(temp,{
 		standalone:"turf",
 		paths: ['./node_modules/turf/node_modules']
 	});
@@ -45,29 +68,19 @@ app.get("/build", function(req, res){
 		global: true
 	}, 'uglifyify');
 	
-	var filename;
-	if (!req.query.fn){
-		var d = new Date();
-		d = d.toDateString();
-		d = d.replace(/ /g, '');
-		filename = "turf_" + d+".min.js"; 
-	}
-	else {
-		filename = req.query.fn.toString()+".min.js";
-	}
-	var writeFile = fs.createWriteStream(__dirname + '/outputs/'+filename);
+	var writeFile = fs.createWriteStream(filename);
 
 	b.bundle().pipe(writeFile);
 
 	writeFile.on('finish', function(){
 
-		res.download(__dirname + '/outputs/'+filename, function(err){
+		res.download(filename, function(err){
 			if (err) {
 				console.log("Hmm error occurred");
 			} 
 			else {
-				fs.unlink(__dirname + '/outputs/temp.js');
-				fs.unlink(__dirname + '/outputs/'+filename);
+				fs.unlink(temp);
+				fs.unlink(filename);
 			}
 		});
 	});

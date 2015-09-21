@@ -13,7 +13,11 @@
 		}
 		.sidebar{
 			background-color: #2ECC71;
-			height: 100%;
+			/*height: 100%;*/
+			position:fixed;
+			top:0;
+			left:0;
+			bottom:0;
 			width: 25%;
 			float: left;
 			color: white;
@@ -99,7 +103,7 @@
 
 		<div class="sideContent">
 			<label>Output file name</label>
-			<input type="text" name="fileName" id="fileName"></input>
+			<input type="text" name="fileName" id="fileName" placeholder="<%= placeholder %>" ></input>
 			<label class="note">Defaults to turf_dddMDDYYYY.min.js</label>
 			<label class="note">No need to include the file extension (eg .min.js)</label>
 			<button id="createBuild">Build</button>
