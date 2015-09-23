@@ -6,6 +6,8 @@ var browserify;
 
 var app = express();
 
+app.use(express.static('assets'));
+
 app.set('view engine', 'ejs');
 
 app.get("/", function(req, res){
@@ -123,11 +125,10 @@ function createModuleArray(allModules){
 function startServer(){
 	browserify = require('browserify');
 
-	var server_port = process.env.OPENSHIFT_NODEJS_PORT || 8080;
-	var server_ip_address = process.env.OPENSHIFT_NODEJS_IP || '127.0.0.1';
- 
-	app.listen(server_port, server_ip_address, function() {
-		console.log("The Turf build tool has been started at " + server_ip_address + " and port "+server_port);
+	var server = app.listen(3000, function() {
+		var host = server.address().address;
+		var port = server.address().port;
+		console.log("The Turf build tool has been started at " + host + " and port "+port);
 	});
 }
 
