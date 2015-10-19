@@ -93,6 +93,15 @@
 			font-style: italic;
 			margin-top: 5px;
 		}
+		#versionNumber{
+			font-size:13px;
+			position: absolute;
+			bottom: 10px;
+		}
+		#versionNumber a{
+			font-weight: bold;
+			color: white;
+		}
 
 	</style>
 </head>
@@ -108,11 +117,14 @@
 			<label class="note">Defaults to turf_dddMDDYYYY.min.js</label>
 			<label class="note">No need to include the file extension (eg .min.js)</label>
 			<button id="createBuild">Build</button>
-		</div>
-	</div>
 
+			<p id="versionNumber">Currently using <a target="_blank" href="https://github.com/Turfjs/turf/tree/v<%= turfVersion %>">Turf <%= turfVersion %></a></p>
+
+		</div>
+	</div>	
 	<div class="modules">
 		<h3>Available modules</h3>
+
 		<ul id="modulesList">
 			<% for(var i=0; i<turfModules.length; i++) {%>
 			<li><input type="checkbox" name=<%= turfModules[i] %> value=<%= turfModules[i] %>><%= turfModules[i] %></li>

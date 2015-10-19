@@ -15,6 +15,7 @@ app.get("/", function(req, res){
 
 	res.render("index", {
 		turfModules: turfModules,
+		turfVersion: turfVersion,
 		placeholder: "turf_" + d
 	});
 });
@@ -91,7 +92,12 @@ app.get("/build", function(req, res){
 var turfModules =[];
 var turfLocation = 'node_modules/turf/node_modules';
 
+var turfVersion;
+
 var startup = (function checkExistance(){
+
+	var pjson = require(__dirname+'/node_modules/turf/package.json');
+	turfVersion = pjson.version;
 
 	fs.lstat(turfLocation, function (err, inodeStatus) {
 		if (err){
