@@ -2,7 +2,7 @@
 <html>
 <head>
 	<style>
-		@import url(http://fonts.googleapis.com/css?family=Open+Sans:400,700);
+		@import url(https://fonts.googleapis.com/css?family=Open+Sans:400,700);
 
 		html, body{
 			height: 100%;
@@ -13,7 +13,11 @@
 		}
 		.sidebar{
 			background-color: #2ECC71;
-			height: 100%;
+			/*height: 100%;*/
+			position:fixed;
+			top:0;
+			left:0;
+			bottom:0;
 			width: 25%;
 			float: left;
 			color: white;
@@ -72,6 +76,7 @@
 			line-height: 24px;
 			border-radius: 2px;
 			width: 80%;
+			padding: 5px 10px;
 		}
 
 		label{
@@ -88,6 +93,15 @@
 			font-style: italic;
 			margin-top: 5px;
 		}
+		#versionNumber{
+			font-size:13px;
+			position: absolute;
+			bottom: 10px;
+		}
+		#versionNumber a{
+			font-weight: bold;
+			color: white;
+		}
 
 	</style>
 </head>
@@ -95,19 +109,22 @@
 <body>
 
 	<div class="sidebar">
-		<img src="http://turfjs.org/static/assets/img/logo.png">
+		<img src="logo.png">
 
 		<div class="sideContent">
 			<label>Output file name</label>
-			<input type="text" name="fileName" id="fileName"></input>
+			<input type="text" name="fileName" id="fileName" placeholder="<%= placeholder %>" ></input>
 			<label class="note">Defaults to turf_dddMDDYYYY.min.js</label>
 			<label class="note">No need to include the file extension (eg .min.js)</label>
 			<button id="createBuild">Build</button>
-		</div>
-	</div>
 
+			<p id="versionNumber">Currently using <a target="_blank" href="https://github.com/Turfjs/turf/tree/v<%= turfVersion %>">Turf <%= turfVersion %></a></p>
+
+		</div>
+	</div>	
 	<div class="modules">
 		<h3>Available modules</h3>
+
 		<ul id="modulesList">
 			<% for(var i=0; i<turfModules.length; i++) {%>
 			<li><input type="checkbox" name=<%= turfModules[i] %> value=<%= turfModules[i] %>><%= turfModules[i] %></li>
@@ -145,5 +162,15 @@
 		}
 	}
 	
+</script>
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-69009460-1', 'auto');
+  ga('send', 'pageview');
+
 </script>
 </html>
