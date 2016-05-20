@@ -23,7 +23,7 @@
         "browserify": "^11.1.0",
         "ejs": "2.3.3",
         "express": "4.13.3",
-        "turf": "^2.0.2",
+        "turf": "^3.0.0",
         "uglifyify": "3.0.1"
     },
     "scripts": {
