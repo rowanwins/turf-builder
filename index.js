@@ -1,8 +1,7 @@
 var fs = require("fs");
 var path = require("path");
 var express = require("express");
-
-var browserify;
+var browserify = require('browserify');
 
 var app = express();
 
@@ -11,7 +10,7 @@ app.use(express.static('assets'));
 app.set('view engine', 'ejs');
 
 app.get("/", function(req, res){
-	var d = (new Date()).toDateString().replace(/ /g, '');
+	var d = (new Date()).toDateString().split(' ').join('');
 
 	res.render("index", {
 		turfModules: turfModules,
@@ -22,29 +21,26 @@ app.get("/", function(req, res){
 
 app.get("/build", function(req, res){
 	var requiredModules = req.query.modules.split(",");
-	var outputFileString = "module.exports = {";
 	var name_id = null;
 
 	if (!req.query.fn) {
-		var d = (new Date()).toDateString().replace(/ /g, '');
+		var d = (new Date()).toDateString().split(' ').join('');
 		name_id = "turf_" + d;
 	} else {
 		name_id = req.query.fn.toString();
 	}
 
-	var orig_name_id = name_id;
-	var ct = 0;
-
 	// If somebody else created a file at the exact same time, add an additional
 	// number on the end to prevent clashing
+	var orig_name_id = name_id;
+	var ct = 0;
 	while (fs.existsSync('./outputs/temp-'+name_id+".js")) {
 		name_id = orig_name_id+"-"+ct;
 		ct++;
 	}
-
-	var temp = __dirname+'/outputs/temp-'+name_id+".js";
-	var filename = __dirname+'/outputs/'+name_id+'.min.js';
-
+	
+	var holderFile = __dirname+'\\outputs\\'+name_id+'Main.js';
+	var outputFileString = "module.exports = {";
 	for (var i = 0; i < requiredModules.length; i++ ) {
 		var plainModuleName = requiredModules[i].replace("turf-","");
 		plainModuleName = plainModuleName.split("-").map(function(elem, ind) {
@@ -52,38 +48,37 @@ app.get("/build", function(req, res){
 				return elem.slice(0, 1).toUpperCase()+elem.slice(1); 
 			}
 			return elem;
-		}).join("");
-		
+		}).join("");	
 		outputFileString += plainModuleName + ": require('"+ requiredModules[i] +"'),";
 	}
-
 	outputFileString = outputFileString.substring(0, outputFileString.length - 1);
 	outputFileString += "}";
+	
+	fs.writeFile(holderFile, outputFileString, function (err) {
+		if (err) return console.log(err);
+	});
 
-	fs.writeFileSync(temp, outputFileString);
-
-	var b = browserify(temp,{
-		standalone:"turf",
+	var b = browserify(holderFile, {
+		standalone: "turf",
 		paths: ['./node_modules/turf/node_modules']
 	});
 
 	b.transform({
 		global: true
 	}, 'uglifyify');
-	
-	var writeFile = fs.createWriteStream(filename);
 
-	b.bundle().pipe(writeFile);
+	var filename = __dirname+'\\outputs\\'+name_id+'.min.js';
+	var outFile = fs.createWriteStream(filename)
+	b.bundle().pipe(outFile);
 
-	writeFile.on('finish', function(){
-
+	outFile.on('finish', function(){
 		res.download(filename, function(err){
 			if (err) {
 				console.log("Hmm error occurred");
 			} 
 			else {
-				fs.unlink(temp);
 				fs.unlink(filename);
+				fs.unlink(holderFile);
 			}
 		});
 	});
