@@ -127,50 +127,51 @@
 
 		<ul id="modulesList">
 			<% for(var i=0; i<turfModules.length; i++) {%>
-			<li><input type="checkbox" name=<%= turfModules[i] %> value=<%= turfModules[i] %>><%= turfModules[i] %></li>
-			<% } %>
-		</ul>
-	</div>
+				<li><input type="checkbox" name=<%= turfModules[i] %> value=<%= turfModules[i] %>><%= turfModules[i] %></li>
+				<% } %>
+			</ul>
+		</div>
 
 
-</body>
-<script>
-	
-	var checkedBoxes =[];
-	var moduleList = document.getElementById("modulesList");
-	var createButton = document.getElementById("createBuild");
+	</body>
+	<script>
 
-	createButton.onclick=function(){
-		checkForCheckedBoxes(moduleList);
-		
-		var outputFileName = document.getElementById("fileName").value;
+		var checkedBoxes =[];
+		var moduleList = document.getElementById("modulesList");
+		var createButton = document.getElementById("createBuild");
 
-		if(checkedBoxes.length > 0 ){
-			window.location.href = '/build?modules='+checkedBoxes.toString()+'&fn='+outputFileName;
-		}
-		else{
-			alert("Please select some modules");
-		}
-	};
-	
-	function checkForCheckedBoxes(moduleList) {
-		for (var i = 0; i < moduleList.childElementCount; i++ ) {
-			if (moduleList.children[i].childNodes[0].checked === true) {
-				var moduleName = moduleList.children[i].childNodes[1].data;
-				checkedBoxes.push(moduleName);
+		createButton.onclick=function(){
+			checkForCheckedBoxes(moduleList);
+			var outputFileName = document.getElementById("fileName").value;
+
+			if(checkedBoxes.length > 0 ){
+				var oReq = new XMLHttpRequest();
+				oReq.open("GET", '/build?modules='+checkedBoxes.toString()+'&fn='+outputFileName);
+				oReq.send();
+			}
+			else{
+				alert("Please select some modules");
+			}
+		};
+
+		function checkForCheckedBoxes(moduleList) {
+			for (var i = 0; i < moduleList.childElementCount; i++ ) {
+				if (moduleList.children[i].childNodes[0].checked === true) {
+					var moduleName = moduleList.children[i].childNodes[1].data;
+					checkedBoxes.push(moduleName);
+				}
 			}
 		}
-	}
-	
-</script>
-<script>
-  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 
-  ga('create', 'UA-69009460-1', 'auto');
-  ga('send', 'pageview');
+	</script>
+	<script>
+		(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+			(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+			m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+		})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 
-</script>
-</html>
+		ga('create', 'UA-69009460-1', 'auto');
+		ga('send', 'pageview');
+
+	</script>
+	</html>
