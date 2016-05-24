@@ -1,6 +1,7 @@
 var fs = require("fs");
 var path = require("path");
 var express = require("express");
+
 var browserify = require('browserify');
 
 var app = express();
@@ -10,35 +11,21 @@ app.use(express.static('assets'));
 app.set('view engine', 'ejs');
 
 app.get("/", function(req, res){
-	var d = (new Date()).toDateString().split(' ').join('');
-
 	res.render("index", {
 		turfModules: turfModules,
-		turfVersion: turfVersion,
-		placeholder: "turf_" + d
+		turfVersion: turfVersion
 	});
 });
 
 app.get("/build", function(req, res){
 	var requiredModules = req.query.modules.split(",");
-	var name_id = null;
-
-	if (!req.query.fn) {
-		var d = (new Date()).toDateString().split(' ').join('');
-		name_id = "turf_" + d;
-	} else {
-		name_id = req.query.fn.toString();
-	}
-
-	// If somebody else created a file at the exact same time, add an additional
-	// number on the end to prevent clashing
+	var name_id = req.query.fn.toString();
 	var orig_name_id = name_id;
 	var ct = 0;
 	while (fs.existsSync('./outputs/temp-'+name_id+".js")) {
 		name_id = orig_name_id+"-"+ct;
 		ct++;
 	}
-	
 	var holderFile = __dirname+'\\outputs\\'+name_id+'Main.js';
 	var outputFileString = "module.exports = {";
 	for (var i = 0; i < requiredModules.length; i++ ) {

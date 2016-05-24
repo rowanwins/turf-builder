@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
+	<script type="text/javascript" src="vue.min.js"></script>
 	<style>
 		@import url(https://fonts.googleapis.com/css?family=Open+Sans:400,700);
 
@@ -106,19 +107,19 @@
 	</style>
 </head>
 
-<body>
+<body id="app">
 
 	<div class="sidebar">
 		<img src="logo.png">
 
 		<div class="sideContent">
 			<label>Output file name</label>
-			<input type="text" name="fileName" id="fileName" placeholder="<%= placeholder %>" ></input>
+			<input type="text" name="fileName" id="fileName" placeholder="{{placeHolder}}" v-model="outfileName"></input>
 			<label class="note">Defaults to turf_dddMDDYYYY.min.js</label>
 			<label class="note">No need to include the file extension (eg .min.js)</label>
-			<button id="createBuild">Build</button>
+			<button id="createBuild" v-on:click="getDownload">Build</button>
 
-			<p id="versionNumber">Currently using <a target="_blank" href="https://github.com/Turfjs/turf/tree/v<%= turfVersion %>">Turf <%= turfVersion %></a></p>
+			<p id="versionNumber">Currently using <a target="_blank" href="https://github.com/Turfjs/turf/tree/v{{turfVersion}}">Turf {{turfVersion}}</a></p>
 
 		</div>
 	</div>	
@@ -126,52 +127,54 @@
 		<h3>Available modules</h3>
 
 		<ul id="modulesList">
-			<% for(var i=0; i<turfModules.length; i++) {%>
-				<li><input type="checkbox" name=<%= turfModules[i] %> value=<%= turfModules[i] %>><%= turfModules[i] %></li>
-				<% } %>
-			</ul>
-		</div>
+			<li v-for="item in turfModules">
+				<input type="checkbox" name="{{item}}" value="{{item}}" v-model="selectedModules">{{ item }}
+			</li>
+		</ul>
 
+	</div>
 
-	</body>
-	<script>
-
-		var checkedBoxes =[];
-		var moduleList = document.getElementById("modulesList");
-		var createButton = document.getElementById("createBuild");
-
-		createButton.onclick=function(){
-			checkForCheckedBoxes(moduleList);
-			var outputFileName = document.getElementById("fileName").value;
-
-			if(checkedBoxes.length > 0 ){
-				var oReq = new XMLHttpRequest();
-				oReq.open("GET", '/build?modules='+checkedBoxes.toString()+'&fn='+outputFileName);
-				oReq.send();
+</body>
+<script>
+	var vm = new Vue({
+		el: '#app',
+		data: {
+			turfVersion: "<%= turfVersion %>",
+			turfModulesRaw: "<%= turfModules %>",
+			placeHolder: "turf_" + new Date().toDateString().split(' ').join(''),
+			selectedModules: [],
+			outfileName: null
+		},
+		computed: {
+			turfModules: function () {
+				return this.turfModulesRaw.split(',')
+			},
+			selectedModulesString: function () {
+				return this.selectedModules.toString()
 			}
-			else{
-				alert("Please select some modules");
-			}
-		};
-
-		function checkForCheckedBoxes(moduleList) {
-			for (var i = 0; i < moduleList.childElementCount; i++ ) {
-				if (moduleList.children[i].childNodes[0].checked === true) {
-					var moduleName = moduleList.children[i].childNodes[1].data;
-					checkedBoxes.push(moduleName);
+		},
+		methods: {
+			getDownload: function () {
+				var placeholder = this.placeholder;
+				if(this.selectedModules.length > 0 ){
+					var outfile = this.outfileName;
+					if (typeof outfile == 'undefined' || outfile == null || outfile == ''){
+						outfile = this.placeHolder;
+					}
+					window.location.href = 'build?modules='+this.selectedModulesString+'&fn='+outfile;
 				}
 			}
 		}
+	})
+</script>
+<script>
+	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+		(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+		m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 
-	</script>
-	<script>
-		(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-			(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-			m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-		})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+	ga('create', 'UA-69009460-1', 'auto');
+	ga('send', 'pageview');
 
-		ga('create', 'UA-69009460-1', 'auto');
-		ga('send', 'pageview');
-
-	</script>
-	</html>
+</script>
+</html>

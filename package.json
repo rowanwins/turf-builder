@@ -1,35 +1,35 @@
 {
-    "name": "turf-builder",
-    "version": "1.0.0",
-    "description": "A node package for custom browserify builds of Turf.js",
-    "main": "index.js",
-    "repository": {
-        "type": "git",
-        "url": "https://github.com/rowanwins/turf-builder.git"
-    },
-    "keywords": [
-        "gis",
-        "geo",
-        "geojs",
-        "geospatial",
-        "turf"
-    ],
-    "author": "rowanwins",
-    "license": "MIT",
-    "bugs": {
-        "url": "https://github.com/rowanwins/turf-builder/issues"
-    },
-    "dependencies": {
-        "browserify": "^11.1.0",
-        "ejs": "2.3.3",
-        "express": "4.13.3",
-        "turf": "^3.0.0",
-        "uglifyify": "3.0.1"
-    },
-    "scripts": {
-        "start": "node index.js"
-    },
-    "engines": {
-        "node": "0.12.0"
-    }
+  "name": "turf-builder",
+  "version": "1.0.0",
+  "description": "A node package for custom browserify builds of Turf.js",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/rowanwins/turf-builder.git"
+  },
+  "keywords": [
+    "gis",
+    "geo",
+    "geojs",
+    "geospatial",
+    "turf"
+  ],
+  "author": "rowanwins",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/rowanwins/turf-builder/issues"
+  },
+  "dependencies": {
+    "browserify": "^11.1.0",
+    "ejs": "2.3.3",
+    "express": "4.13.3",
+    "turf": "^3.0.0",
+    "uglifyify": "3.0.1"
+  },
+  "scripts": {
+    "start": "node index.js"
+  },
+  "engines": {
+    "node": "0.12.0"
+  }
 }
