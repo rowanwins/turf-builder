@@ -2,6 +2,8 @@
 <html>
 <head>
 	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/vue/1.0.24/vue.js"></script>
+	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0-rc1/jquery.min.js"></script>
+
 	<style>
 		@import url(https://fonts.googleapis.com/css?family=Open+Sans:400,700);
 
@@ -107,12 +109,12 @@
 			font-weight: bold;
 			color: white;
 		}
-	.warning{
-		font-size: 0.9rem;
-		font-weight: 800;
-		text-transform: uppercase;
-		font-style: italic;
-	}
+		.warning{
+			font-size: 0.9rem;
+			font-weight: 800;
+			text-transform: uppercase;
+			font-style: italic;
+		}
 	</style>
 </head>
 
@@ -127,11 +129,11 @@
 			<label class="note">Defaults to turf_dddMDDYYYY.min.js</label>
 			<label class="note">No need to include the file extension (eg .min.js)</label>
 			<div v-if="selectedModules.length > 0">
-				<a href="build?modules={{selectedModulesString}}&fn={{finalOutFileName}}" download><button id="createBuild">Build</button></a>
+				<button id="createBuild" v-on:click="getDownload">Build</button>
 			</div>
 			<div v-else>
-			<button id="createBuild" disabled>Build</button>
-			<p class="warning">Please select a few modules.</p>
+				<button id="createBuild" disabled>Build</button>
+				<p class="warning">Please select a few modules.</p>
 			</div>
 
 			<p id="versionNumber">Currently using <a target="_blank" href="https://github.com/Turfjs/turf/tree/v{{turfVersion}}">Turf {{turfVersion}}</a></p>
@@ -178,10 +180,19 @@
 		},
 		methods: {
 			getDownload: function () {
-				var placeholder = this.placeholder;
-				if(this.selectedModules.length > 0 ){
-					window.location.href = 'build?modules='+this.selectedModulesString+'&fn='+outfile;
-				}
+				var url = "build?modules="+this.selectedModulesString+"&fn="+ this.finalOutFileName;
+				$.ajax({
+					type: 'GET',
+					url:url,
+					success: function(data){
+						if(data == true){
+							alert('This file is not available for download.');
+						}else{
+							window.location =""+url+"";
+						}
+					}
+
+				})
 			}
 		}
 	})
