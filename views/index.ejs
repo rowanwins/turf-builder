@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<script type="text/javascript" src="vue.min.js"></script>
+	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/vue/1.0.24/vue.js"></script>
 	<style>
 		@import url(https://fonts.googleapis.com/css?family=Open+Sans:400,700);
 
@@ -69,6 +69,10 @@
 			cursor: pointer;
 			background-color: #126D38;
 		}
+		#createBuild:disabled {
+			background: #21a859;
+			cursor: default;
+		}
 		h3{
 			padding-left: 45px;
 		}
@@ -103,7 +107,12 @@
 			font-weight: bold;
 			color: white;
 		}
-
+	.warning{
+		font-size: 0.9rem;
+		font-weight: 800;
+		text-transform: uppercase;
+		font-style: italic;
+	}
 	</style>
 </head>
 
@@ -117,7 +126,13 @@
 			<input type="text" name="fileName" id="fileName" placeholder="{{placeHolder}}" v-model="outfileName"></input>
 			<label class="note">Defaults to turf_dddMDDYYYY.min.js</label>
 			<label class="note">No need to include the file extension (eg .min.js)</label>
-			<button id="createBuild" v-on:click="getDownload">Build</button>
+			<div v-if="selectedModules.length > 0">
+				<a href="build?modules={{selectedModulesString}}&fn={{finalOutFileName}}"><button id="createBuild">Build</button></a>
+			</div>
+			<div v-else>
+			<button id="createBuild" disabled>Build</button>
+			<p class="warning">Please select a few modules.</p>
+			</div>
 
 			<p id="versionNumber">Currently using <a target="_blank" href="https://github.com/Turfjs/turf/tree/v{{turfVersion}}">Turf {{turfVersion}}</a></p>
 
@@ -151,16 +166,20 @@
 			},
 			selectedModulesString: function () {
 				return this.selectedModules.toString()
+			},
+			finalOutFileName: function () {
+				if (typeof this.outfile == 'undefined' || this.outfile == null || this.outfile == ''){
+					return this.placeHolder;
+				}
+				else {
+					return this.outfile;
+				}
 			}
 		},
 		methods: {
 			getDownload: function () {
 				var placeholder = this.placeholder;
 				if(this.selectedModules.length > 0 ){
-					var outfile = this.outfileName;
-					if (typeof outfile == 'undefined' || outfile == null || outfile == ''){
-						outfile = this.placeHolder;
-					}
 					window.location.href = 'build?modules='+this.selectedModulesString+'&fn='+outfile;
 				}
 			}
