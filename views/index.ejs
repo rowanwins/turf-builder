@@ -127,7 +127,7 @@
 			<label class="note">Defaults to turf_dddMDDYYYY.min.js</label>
 			<label class="note">No need to include the file extension (eg .min.js)</label>
 			<div v-if="selectedModules.length > 0">
-				<a href="build?modules={{selectedModulesString}}&fn={{finalOutFileName}}"><button id="createBuild">Build</button></a>
+				<a href="build?modules={{selectedModulesString}}&fn={{finalOutFileName}}" download><button id="createBuild">Build</button></a>
 			</div>
 			<div v-else>
 			<button id="createBuild" disabled>Build</button>
