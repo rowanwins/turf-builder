@@ -183,12 +183,16 @@
 				var url = "build?modules="+this.selectedModulesString+"&fn="+ this.finalOutFileName;
 				$.ajax({
 					type: 'GET',
-					url:url,
+					url: "/build",
+					data: {
+						modules: this.selectedModulesString,
+						fn: this.finalOutFileName
+					},
 					success: function(data){
 						if(data == true){
 							alert('This file is not available for download.');
 						}else{
-							window.location =""+url+"";
+							window.location.href =""+url+"";
 						}
 					}
 
