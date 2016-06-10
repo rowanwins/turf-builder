@@ -180,23 +180,14 @@
 		},
 		methods: {
 			getDownload: function () {
-				var url = "build?modules="+this.selectedModulesString+"&fn="+ this.finalOutFileName;
-				$.ajax({
-					type: 'GET',
-					url: "/build",
-					data: {
-						modules: this.selectedModulesString,
-						fn: this.finalOutFileName
-					},
-					success: function(data){
-						if(data == true){
-							alert('This file is not available for download.');
-						}else{
-							window.location.href =""+url+"";
-						}
-					}
-
-				})
+				var placeholder = this.placeholder;
+				if(this.selectedModules.length > 0 ){
+					// var outfile = this.outfileName;
+					// if (typeof outfile == 'undefined' || outfile == null || outfile == ''){
+					// 	outfile = this.placeHolder;
+					// }
+					window.location.href = 'build?modules='+this.selectedModulesString+'&fn='+this.finalOutFileName;
+				}
 			}
 		}
 	})
