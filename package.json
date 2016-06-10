@@ -1,6 +1,6 @@
 {
   "name": "turf-builder",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A node package for custom browserify builds of Turf.js",
   "main": "index.js",
   "repository": {
@@ -30,6 +30,7 @@
     "start": "node index.js"
   },
   "engines": {
-    "node": "0.12.0"
+    "node": "4.2.1",
+    "npm": "2.14.7"
   }
 }
