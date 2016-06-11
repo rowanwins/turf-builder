@@ -1,12 +1,15 @@
 var fs = require("fs");
 var path = require("path");
 var express = require("express");
+var bodyParser = require('body-parser')
 
 var browserify = require('browserify');
 
 var app = express();
 
 app.use(express.static('assets'));
+app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({ extended: true }));
 
 app.set('view engine', 'ejs');
 
@@ -17,9 +20,9 @@ app.get("/", function(req, res){
 	});
 });
 
-app.get("/build", function(req, res){
-	var requiredModules = req.query.modules.split(",");
-	var name_id = req.query.fn.toString();
+app.post("/build", function(req, res){
+	var requiredModules = req.body.modules.split(",");
+	var name_id = req.body.fn.toString();
 	var orig_name_id = name_id;
 	var ct = 0;
 	while (fs.existsSync('./outputs/temp-'+name_id+".js")) {

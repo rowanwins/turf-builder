@@ -182,11 +182,10 @@
 			getDownload: function () {
 				var placeholder = this.placeholder;
 				if(this.selectedModules.length > 0 ){
-					// var outfile = this.outfileName;
-					// if (typeof outfile == 'undefined' || outfile == null || outfile == ''){
-					// 	outfile = this.placeHolder;
-					// }
-					window.location.href = 'build?modules='+this.selectedModulesString+'&fn='+this.finalOutFileName;
+					var form = $('<form>', {action: '/build', method: 'POST'});
+  					form.append($('<input>', {name: 'modules', value: this.selectedModulesString}));
+  					form.append($('<input>', {name: 'fn', value: this.finalOutFileName}));
+  					form.submit();
 				}
 			}
 		}
