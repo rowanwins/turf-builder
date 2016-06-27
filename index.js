@@ -22,14 +22,6 @@ app.get("/", function(req, res){
 
 app.post("/build", function(req, res){
 	var requiredModules = req.body.modules.split(",");
-	var name_id = req.body.fn.toString();
-	var orig_name_id = name_id;
-	var ct = 0;
-	while (fs.existsSync('./outputs/temp-'+name_id+".js")) {
-		name_id = orig_name_id+"-"+ct;
-		ct++;
-	}
-	var holderFile = __dirname+'\\outputs\\'+name_id+'Main.js';
 	var outputFileString = "module.exports = {";
 	for (var i = 0; i < requiredModules.length; i++ ) {
 		var plainModuleName = requiredModules[i].replace("turf-","");
@@ -43,21 +35,20 @@ app.post("/build", function(req, res){
 	}
 	outputFileString = outputFileString.substring(0, outputFileString.length - 1);
 	outputFileString += "}";
-	
-	fs.writeFile(holderFile, outputFileString, function (err) {
-		if (err) return console.log(err);
-	});
+	fs.writeFile('tmp.txt', outputFileString,  function(err) {
+		if (err) {
+			return console.error(err);
+		}
+		var b = browserify('tmp.txt', {
+			standalone: "turf",
+			paths: ['./node_modules/turf/node_modules']
+		});
 
-	var b = browserify(holderFile, {
-		standalone: "turf",
-		paths: ['./node_modules/turf/node_modules']
+		b.transform({
+			global: true
+		}, 'uglifyify');
+		b.bundle().pipe(res);
 	});
-
-	b.transform({
-		global: true
-	}, 'uglifyify');
-	var filename = __dirname+'\\outputs\\'+name_id+'.min.js';
-	b.bundle().pipe(res);
 });
 
 var turfModules =[];
