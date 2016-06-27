@@ -1,121 +1,9 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/vue/1.0.24/vue.js"></script>
+	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/vue/1.0.25/vue.js"></script>
 	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0-rc1/jquery.min.js"></script>
-
-	<style>
-		@import url(https://fonts.googleapis.com/css?family=Open+Sans:400,700);
-
-		html, body{
-			height: 100%;
-			font-family: 'Open Sans';
-		}
-		body{
-			margin: 0px;
-		}
-		.sidebar{
-			background-color: #2ECC71;
-			/*height: 100%;*/
-			position:fixed;
-			top:0;
-			left:0;
-			bottom:0;
-			width: 25%;
-			float: left;
-			color: white;
-		}
-		
-		.sideContent{
-			padding: 0px 15px;
-		}
-		h1{
-			font-weight: 400;
-			margin-top: 0px;
-		}
-
-		.modules{
-			width: 75%;
-			float: right;
-			padding: 30px 0px;
-		}
-
-		#modulesList li{
-			list-style-type: none;
-			line-height: 25px;
-			font-size: 0.9em;
-		}
-
-		#modulesList{
-			-webkit-columns: 200px 3; /* Chrome, Safari, Opera */
-			-moz-columns: 200px 3; /* Firefox */
-			columns: 200px 3;
-		}
-
-		input[type=checkbox]{
-			margin-right: 10px;
-		}
-		
-		#createBuild{
-			border:none;
-			background-color: #21a859;
-			padding: 10px 20px;
-			color: white;
-			font-weight: 700;
-			border-radius: 3px;
-			text-transform: uppercase;
-			margin-top: 90px;
-			transition: 0.3s;
-		}
-		#createBuild:hover{
-			cursor: pointer;
-			background-color: #126D38;
-		}
-		#createBuild:disabled {
-			background: #21a859;
-			cursor: default;
-		}
-		h3{
-			padding-left: 45px;
-		}
-		input[type=text]{
-			border: none;
-			line-height: 24px;
-			border-radius: 2px;
-			width: 80%;
-			padding: 5px 10px;
-		}
-
-		label{
-			color: #375634;
-			font-size: .8em;
-			text-transform: uppercase;
-			font-weight: 800;
-			margin-bottom: 5px;
-			display: block;
-		}
-		.note{
-			font-weight: 500;
-			text-transform: none;
-			font-style: italic;
-			margin-top: 5px;
-		}
-		#versionNumber{
-			font-size:13px;
-			position: absolute;
-			bottom: 10px;
-		}
-		#versionNumber a{
-			font-weight: bold;
-			color: white;
-		}
-		.warning{
-			font-size: 0.9rem;
-			font-weight: 800;
-			text-transform: uppercase;
-			font-style: italic;
-		}
-	</style>
+	<link rel="stylesheet" type="text/css" href="style.css">
 </head>
 
 <body id="app">
@@ -160,7 +48,7 @@
 			turfModulesRaw: "<%= turfModules %>",
 			placeHolder: "turf_" + new Date().toDateString().split(' ').join(''),
 			selectedModules: [],
-			outfileName: null
+			outfileName: null,
 		},
 		computed: {
 			turfModules: function () {
@@ -170,22 +58,41 @@
 				return this.selectedModules.toString()
 			},
 			finalOutFileName: function () {
-				if (typeof this.outfile == 'undefined' || this.outfile == null || this.outfile == ''){
+				if (typeof this.outfileName == 'undefined' || this.outfileName == null || this.outfileName == ''){
 					return this.placeHolder;
 				}
 				else {
-					return this.outfile;
+					return this.outfileName;
 				}
 			}
 		},
 		methods: {
 			getDownload: function () {
-				var placeholder = this.placeholder;
+				var vm = this;
 				if(this.selectedModules.length > 0 ){
-					var form = $('<form>', {action: '/build', method: 'POST'});
-  					form.append($('<input>', {name: 'modules', value: this.selectedModulesString}));
-  					form.append($('<input>', {name: 'fn', value: this.finalOutFileName}));
-  					form.submit();
+					$.post("build",
+					{
+						modules: this.selectedModulesString,
+						fn: this.finalOutFileName
+					},
+					function(data, status){
+						
+						var textFileAsBlob = new Blob([data], {type:'text/plain'});
+						var fileNameToSaveAs = vm.finalOutFileName+'.min.js';
+
+						var downloadLink = document.createElement("a");
+						downloadLink.download = fileNameToSaveAs;
+						downloadLink.innerHTML = "Download File";
+						if (window.URL != null){
+							downloadLink.href = window.URL.createObjectURL(textFileAsBlob);
+						} else {
+							downloadLink.href = window.URL.createObjectURL(textFileAsBlob);
+							downloadLink.onclick = destroyClickedElement;
+							downloadLink.style.display = "none";
+							document.body.appendChild(downloadLink);
+						}
+						downloadLink.click();
+					});
 				}
 			}
 		}

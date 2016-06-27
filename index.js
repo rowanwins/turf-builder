@@ -56,22 +56,8 @@ app.post("/build", function(req, res){
 	b.transform({
 		global: true
 	}, 'uglifyify');
-
 	var filename = __dirname+'\\outputs\\'+name_id+'.min.js';
-	var outFile = fs.createWriteStream(filename)
-	b.bundle().pipe(outFile);
-
-	outFile.on('finish', function(){
-		res.download(filename, function(err){
-			if (err) {
-				console.log("Hmm error occurred");
-			} 
-			else {
-				fs.unlink(filename);
-				fs.unlink(holderFile);
-			}
-		});
-	});
+	b.bundle().pipe(res);
 });
 
 var turfModules =[];
