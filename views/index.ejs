@@ -30,13 +30,18 @@
 	</div>	
 	<div class="modules">
 		<h3>Available modules</h3>
-
 		<ul id="modulesList">
 			<li v-for="item in turfModules">
 				<input type="checkbox" name="{{item}}" value="{{item}}" v-model="selectedModules">{{ item }}
 			</li>
 		</ul>
-
+		<div v-if="processing">
+			<div class="spinner">
+				<div class="double-bounce1"></div>
+				<div class="double-bounce2"></div>
+			</div>
+			<p class="processingText">Just processing your request...</p>
+		</div>
 	</div>
 
 </body>
@@ -49,6 +54,7 @@
 			placeHolder: "turf_" + new Date().toDateString().split(' ').join(''),
 			selectedModules: [],
 			outfileName: null,
+			processing: false
 		},
 		computed: {
 			turfModules: function () {
@@ -69,6 +75,7 @@
 		methods: {
 			getDownload: function () {
 				var vm = this;
+				this.processing = true;
 				if(this.selectedModules.length > 0 ){
 					$.post("build",
 					{
@@ -92,6 +99,7 @@
 							document.body.appendChild(downloadLink);
 						}
 						downloadLink.click();
+						vm.processing = false;
 					});
 				}
 			}
