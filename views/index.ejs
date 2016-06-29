@@ -84,7 +84,7 @@
 					},
 					function(data, status){
 						
-						var textFileAsBlob = new Blob([data], {type:'text/plain'});
+						var textFileAsBlob = new Blob([data], {type:'application/javascript'});
 						var fileNameToSaveAs = vm.finalOutFileName+'.min.js';
 
 						var downloadLink = document.createElement("a");
