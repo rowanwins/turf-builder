@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/vue/1.0.25/vue.js"></script>
+	<script type="text/javascript" src="vue.min.js"></script>
 	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0-rc1/jquery.min.js"></script>
 	<link rel="stylesheet" type="text/css" href="style.css">
 </head>
@@ -14,8 +14,6 @@
 		<div class="sideContent">
 			<label>Output file name</label>
 			<input type="text" name="fileName" id="fileName" placeholder="{{placeHolder}}" v-model="outfileName"></input>
-			<label class="note">Defaults to turf_dddMDDYYYY.min.js</label>
-			<label class="note">No need to include the file extension (eg .min.js)</label>
 			<div v-if="selectedModules.length > 0">
 				<button id="createBuild" v-on:click="getDownload">Build</button>
 			</div>
@@ -35,11 +33,7 @@
 				<input type="checkbox" name="{{item}}" value="{{item}}" v-model="selectedModules">{{ item }}
 			</li>
 		</ul>
-		<div v-if="processing">
-			<div class="spinner">
-				<div class="double-bounce1"></div>
-				<div class="double-bounce2"></div>
-			</div>
+		<div v-if="processing" transition="expand" class="progress">
 			<p class="processingText">Just processing your request...</p>
 		</div>
 	</div>
@@ -76,6 +70,7 @@
 			getDownload: function () {
 				var vm = this;
 				this.processing = true;
+
 				if(this.selectedModules.length > 0 ){
 					$.post("build",
 					{
@@ -83,7 +78,7 @@
 						fn: this.finalOutFileName
 					},
 					function(data, status){
-						
+
 						var textFileAsBlob = new Blob([data], {type:'application/javascript'});
 						var fileNameToSaveAs = vm.finalOutFileName+'.min.js';
 
@@ -96,10 +91,10 @@
 						downloadLink.click();
 						vm.processing = false;
 					});
-				}
 			}
 		}
-	})
+	}
+})
 </script>
 <script>
 	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
