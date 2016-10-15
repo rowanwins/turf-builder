@@ -1,31 +1,30 @@
 var fs = require("fs");
 var path = require("path");
 var express = require("express");
-var bodyParser = require('body-parser')
+var bodyParser = require('body-parser');
 
 var browserify = require('browserify');
 
 var app = express();
 
 app.use(express.static('assets'));
-app.use(bodyParser.json())
+app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.set('view engine', 'ejs');
 
-app.get("/", function(req, res){
+app.get("/", function(req, res) {
 	res.render("index", {
 		turfModules: turfModules,
 		turfVersion: turfVersion
 	});
 });
 
-app.post("/build", function(req, res){
+app.post("/build", function(req, res) {
 	var requiredModules = req.body.modules.split(",");
 	var outputFileString = "module.exports = {";
 	for (var i = 0; i < requiredModules.length; i++ ) {
-		var plainModuleName = requiredModules[i].replace("turf-","");
-		plainModuleName = plainModuleName.split("-").map(function(elem, ind) {
+		var plainModuleName = requiredModules[i].split("-").map(function(elem, ind) {
 			if (ind > 0) { 
 				return elem.slice(0, 1).toUpperCase()+elem.slice(1); 
 			}
@@ -41,7 +40,7 @@ app.post("/build", function(req, res){
 		}
 		var b = browserify('tmp.txt', {
 			standalone: "turf",
-			paths: ['./node_modules/turf/node_modules']
+			paths: ['./node_modules/@turf']
 		});
 
 		b.transform({
@@ -52,18 +51,17 @@ app.post("/build", function(req, res){
 });
 
 var turfModules =[];
-var turfLocation = 'node_modules/turf/node_modules';
+var turfLocation = 'node_modules/@turf';
 
 var turfVersion;
 
-var startup = (function checkExistance(){
-
-	var pjson = require(__dirname+'/node_modules/turf/package.json');
+var startup = (function checkExistance() {
+	var pjson = require(__dirname+'/node_modules/@turf/turf/package.json');
 	turfVersion = pjson.version;
 
 	fs.lstat(turfLocation, function (err, inodeStatus) {
-		if (err){
-			console.log("Hmmm there was an error and we couldn't find any turf modules... please double check the install instuctions");
+		if (err) {
+			console.log("Hmmm there was an error and we couldn't find any turf modules... please double check the install instructions");
 			return;
 		}
 
@@ -82,30 +80,27 @@ function getDirectories(srcpath) {
 	});
 }
 
-function createModuleArray(allModules){
+function createModuleArray(allModules) {
 	for (i = 0; i < allModules.length; i++) { 
-		if (allModules[i].indexOf("turf") > -1){
+		if (allModules[i].indexOf("turf") === -1) {
 			turfModules.push(allModules[i]); 
 		}
 	}
 }
 
-function startServer(){
+function startServer() {
 	browserify = require('browserify');
 
 	var server_port = process.env.PORT || 3000;
 
 	app.listen(server_port, function() {
-		console.log("The Turf build tool has been started at port "+server_port);
+		console.log("The Turf build tool has been started at port " + server_port);
 	});
 }
 
-
-
-function checkCreateOutputDirectory(){
-
+function checkCreateOutputDirectory() {
 	fs.lstat('./outputs', function (err, inodeStatus) {
-		if (err){
+		if (err) {
 			fs.mkdir('./outputs');
 			return;
 		}
