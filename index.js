@@ -24,13 +24,13 @@ app.post("/build", function(req, res) {
 	var requiredModules = req.body.modules.split(",");
 	var outputFileString = "module.exports = {";
 	for (var i = 0; i < requiredModules.length; i++ ) {
-		// var plainModuleName = requiredModules[i].split("-").map(function(elem, ind) {
-		// 	if (ind > 0) { 
-		// 		return elem.slice(0, 1).toUpperCase()+elem.slice(1); 
-		// 	}
-		// 	return elem;
-		// }).join("");	
-		outputFileString += requiredModules[i] + ": require('@turf/"+ requiredModules[i] +"'),";
+		var plainModuleName = requiredModules[i].split("-").map(function(elem, ind) {
+			if (ind > 0) { 
+				return elem.slice(0, 1).toUpperCase()+elem.slice(1); 
+			}
+			return elem;
+		}).join("");	
+		outputFileString += plainModuleName + ": require('@turf/"+ requiredModules[i] +"'),";
 	}
 	// outputFileString +=  req.body.modules;
 	// console.log(req.body.modules);
