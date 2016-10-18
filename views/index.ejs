@@ -1,14 +1,13 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<script type="text/javascript" src="vue.min.js"></script>
+	<script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/vue/1.0.24/vue.js"></script>
 	<script type="text/javascript" src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
 	<link rel="stylesheet" type="text/css" href="style.css">
 </head>
 
 <body id="app">
 	<div class="sidebar">
-		<a href="https://github.com/rowanwins/turf-builder" target="_blank" class="title">turf-builder</a>
 		<img src="logo.png">
 		<div class="sideContent">
 			<label>
@@ -20,7 +19,7 @@
 			</div>
 			<div v-else>
 				<button id="createBuild" disabled>Build</button>
-				<p class="warning">Please select few modules.</p>
+				<p class="warning">Please select a few modules.</p>
 			</div>
 			<p id="versionNumber">Currently using <a href="https://github.com/Turfjs/turf/releases/tag/v{{turfVersion}}" target="_blank">Turf {{turfVersion}}</a></p>
 		</div>
