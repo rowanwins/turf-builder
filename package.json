@@ -1,6 +1,6 @@
 {
   "name": "turf-builder",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "A node package for custom browserify builds of Turf.js",
   "main": "index.js",
   "repository": {
@@ -21,11 +21,11 @@
   },
   "dependencies": {
     "body-parser": "1.15.2",
-    "browserify": "13.0.1",
-    "ejs": "2.4.2",
+    "browserify": "13.1.0",
+    "ejs": "2.5.2",
     "express": "4.14.0",
-    "turf": "3.0.11",
-    "uglifyify": "3.0.2"
+    "@turf/turf": "3.5.2",
+    "uglifyify": "3.0.4"
   },
   "scripts": {
     "start": "node index.js"

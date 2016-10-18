@@ -2,43 +2,42 @@
 <html>
 <head>
 	<script type="text/javascript" src="vue.min.js"></script>
-	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0-rc1/jquery.min.js"></script>
+	<script type="text/javascript" src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
 	<link rel="stylesheet" type="text/css" href="style.css">
 </head>
 
 <body id="app">
-
 	<div class="sidebar">
+		<a href="https://github.com/rowanwins/turf-builder" target="_blank" class="title">turf-builder</a>
 		<img src="logo.png">
-
 		<div class="sideContent">
-			<label>Output file name</label>
-			<input type="text" name="fileName" id="fileName" placeholder="{{placeHolder}}" v-model="outfileName"></input>
+			<label>
+				<span class="filenameLabel">Output file name</span>
+				<input type="text" name="fileName" id="fileName" placeholder="{{placeHolder}}" v-model="outfileName" />
+			</label>
 			<div v-if="selectedModules.length > 0">
 				<button id="createBuild" v-on:click="getDownload">Build</button>
 			</div>
 			<div v-else>
 				<button id="createBuild" disabled>Build</button>
-				<p class="warning">Please select a few modules.</p>
+				<p class="warning">Please select few modules.</p>
 			</div>
-
-			<p id="versionNumber">Currently using <a target="_blank" href="https://github.com/Turfjs/turf/tree/v{{turfVersion}}">Turf {{turfVersion}}</a></p>
-
+			<p id="versionNumber">Currently using <a href="https://github.com/Turfjs/turf/releases/tag/v{{turfVersion}}" target="_blank">Turf {{turfVersion}}</a></p>
 		</div>
 	</div>	
 	<div class="modules">
 		<h3>Available modules</h3>
 		<ul id="modulesList">
 			<li v-for="item in turfModules">
-				<input type="checkbox" name="{{item}}" value="{{item}}" v-model="selectedModules">{{ item }}
+				<label><input type="checkbox" name="{{item}}" value="{{item}}" v-model="selectedModules" />{{ item }}</label>
 			</li>
 		</ul>
 		<div v-if="processing" transition="expand" class="progress">
 			<p class="processingText">Just processing your request...</p>
 		</div>
 	</div>
-
 </body>
+
 <script>
 	var vm = new Vue({
 		el: '#app',
@@ -58,10 +57,9 @@
 				return this.selectedModules.toString()
 			},
 			finalOutFileName: function () {
-				if (typeof this.outfileName == 'undefined' || this.outfileName == null || this.outfileName == ''){
+				if (typeof this.outfileName == 'undefined' || this.outfileName == null || this.outfileName == '') {
 					return this.placeHolder;
-				}
-				else {
+				} else {
 					return this.outfileName;
 				}
 			}
@@ -71,14 +69,11 @@
 				var vm = this;
 				this.processing = true;
 
-				if(this.selectedModules.length > 0 ){
-					$.post("build",
-					{
+				if(this.selectedModules.length > 0) {
+					$.post("build", {
 						modules: this.selectedModulesString,
 						fn: this.finalOutFileName
-					},
-					function(data, status){
-
+					}, function(data, status) {
 						var textFileAsBlob = new Blob([data], {type:'application/javascript'});
 						var fileNameToSaveAs = vm.finalOutFileName+'.min.js';
 
@@ -87,7 +82,7 @@
 						downloadLink.setAttribute("type", "hidden");
 						downloadLink.download = fileNameToSaveAs;
 						downloadLink.href = window.URL.createObjectURL(textFileAsBlob);
-						downloadLink.innerHTML = "Download File";
+						downloadLink.innerHTML = "Download file";
 						downloadLink.click();
 						vm.processing = false;
 					});
@@ -104,6 +99,6 @@
 
 	ga('create', 'UA-69009460-1', 'auto');
 	ga('send', 'pageview');
-
 </script>
+
 </html>

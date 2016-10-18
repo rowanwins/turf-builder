@@ -3,3 +3,4 @@ outputs/**
 test/**
 test/
 tmp.txt
+.idea/
