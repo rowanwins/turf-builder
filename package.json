@@ -20,11 +20,11 @@
     "url": "https://github.com/rowanwins/turf-builder/issues"
   },
   "dependencies": {
+    "@turf/turf": "^4.7.3",
     "body-parser": "1.15.2",
     "browserify": "13.1.0",
     "ejs": "2.5.2",
     "express": "4.14.0",
-    "@turf/turf": "3.5.2",
     "uglifyify": "3.0.4"
   },
   "scripts": {

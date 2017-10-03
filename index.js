@@ -25,11 +25,11 @@ app.post("/build", function(req, res) {
 	var outputFileString = "module.exports = {";
 	for (var i = 0; i < requiredModules.length; i++ ) {
 		var plainModuleName = requiredModules[i].split("-").map(function(elem, ind) {
-			if (ind > 0) { 
-				return elem.slice(0, 1).toUpperCase()+elem.slice(1); 
+			if (ind > 0) {
+				return elem.slice(0, 1).toUpperCase()+elem.slice(1);
 			}
 			return elem;
-		}).join("");	
+		}).join("");
 		outputFileString += plainModuleName + ": require('@turf/"+ requiredModules[i] +"'),";
 	}
 	// outputFileString +=  req.body.modules;
@@ -85,9 +85,9 @@ function getDirectories(srcpath) {
 }
 
 function createModuleArray(allModules) {
-	for (i = 0; i < allModules.length; i++) { 
+	for (i = 0; i < allModules.length; i++) {
 		if (allModules[i].indexOf("turf") === -1) {
-			turfModules.push(allModules[i]); 
+			turfModules.push(allModules[i]);
 		}
 	}
 }
